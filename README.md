@@ -1,0 +1,5 @@
+In MasterMind one player chooses a word and the other player (or players) try to guess the word by being told how many letters match.  Each correct letter in the correct place receives one black, and each correct letter in the wrong place receives one white.  No letter can match more than one letter in the correct word (or vice versa).
+
+This program is a NetBeans project which allows either the user or the computer to pick a word, and either one to make guesses.  It can be successfully compiled to an executable .jar file.  It is built on the javax.swing framework.
+
+The words it uses were downloaded from a scrabble dictionary somewhere, and include many words which are rarely if ever used and some cannot even be found in most dictionaries.  If the computer is picking words which you do not think are real, that is why.
