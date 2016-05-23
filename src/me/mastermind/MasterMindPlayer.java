@@ -16,6 +16,7 @@ public class MasterMindPlayer {
     public final Word wrd;
     public ArrayList<Possibility> knowledge;
     public MMDictionary dict;
+    private Possibility certainMask;
     
     public MasterMindPlayer(MMDictionary dc, Word w) {
         wrd = w;
@@ -137,17 +138,24 @@ public class MasterMindPlayer {
     }
     
     public String makeGuess() {
-        String randomWordChoice = null;
-        while (randomWordChoice == null) {
-            Possibility randomPossibilityChoice = knowledge.get((int)(Math.random()*knowledge.size()));
-            List<String> maybeWords = dict.lookup(randomPossibilityChoice);
-            if (maybeWords.isEmpty()) {
-                knowledge.remove(randomPossibilityChoice);
+        if (certainMask == null) makeCertainPoss();
+        String randomWordChoice;
+        Possibility useToGuess;
+        List<String> allGuesses = new ArrayList<>();
+        for (Possibility p : knowledge) {
+            useToGuess = p.pclone();
+            for (int i = 0; i < length; i++) {
+                if (certainMask.letters(i) != Possibility.BLANK) {
+                    useToGuess.setLetter(i, Possibility.BLANK);
+                }
             }
-            else {
-                randomWordChoice = maybeWords.get((int)(Math.random()*maybeWords.size()));
+            List<String> forUTG = dict.lookup(useToGuess);
+            if (forUTG.isEmpty()) {
+                forUTG = dict.lookup(p);
             }
+            allGuesses.addAll(forUTG);
         }
+        randomWordChoice = allGuesses.get((int)(Math.random()*allGuesses.size()));
         return randomWordChoice;
     }
     
@@ -260,6 +268,22 @@ public class MasterMindPlayer {
                 }
             }
         }
+        makeCertainPoss();
         return kn;
+    }
+    
+    public void makeCertainPoss() {
+        Possibility mask = new Possibility(length);
+        for (int i = 0; i < length; i++) {
+            mask.setLetter(i,knowledge.get(0).letters(i));
+        }
+        for (Possibility p : knowledge) {
+            for (int i = 0; i < length; i++) {
+                if (mask.letters(i) != Possibility.BLANK && p.letters(i) != mask.letters(i)) {
+                    mask.setLetter(i, Possibility.BLANK);
+                }
+            }
+        }
+        certainMask = mask;
     }
 }
