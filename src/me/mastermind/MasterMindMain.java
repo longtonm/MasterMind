@@ -219,6 +219,7 @@ public class MasterMindMain extends javax.swing.JFrame {
                 newWordPicker.setVisible(true);
                 if (newWordPicker.validWord == null) return;
                 currentWord = new Word(newWordPicker.validWord);
+                this.length = currentWord.length;
                 newWordPicker.dispose();
             }
         }
